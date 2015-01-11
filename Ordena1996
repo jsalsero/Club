@@ -1,0 +1,112 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n,aux;
+int arr[200007];
+int ord[200007];
+int cubeta[4];
+string res;
+char aux2[10];
+queue<int> cola[6];
+
+int main()
+{
+	cin >> n;
+	int i=0;
+	while(i<n){
+		cin >> arr[i++];
+		cubeta[arr[i-1]]++;
+	}
+	i=0;
+	while(cubeta[1]--)
+		ord[i++]=1;
+	while(cubeta[2]--)
+		ord[i++]=2;
+	while(cubeta[3]--)
+		ord[i++]=3;
+
+	for(int j=0 ; j<n ; j++){
+		if(arr[j] != ord[j]){
+			if( arr[j]==1 && ord[j]==2)
+				cola[0].push(j);
+			if( arr[j]==1 && ord[j]==3)
+				cola[1].push(j);
+			if( arr[j]==2 && ord[j]==1)
+				cola[2].push(j);
+			if( arr[j]==2 && ord[j]==3)
+				cola[3].push(j);
+			if( arr[j]==3 && ord[j]==1)
+				cola[4].push(j);
+			if( arr[j]==3 && ord[j]==2)
+				cola[5].push(j);
+		}
+	}
+
+	while(!cola[0].empty() && !cola[2].empty()){
+			itoa(cola[2].front()+1,aux2,10);
+			res.append(aux2);
+			res.append(" ");
+			itoa(cola[0].front()+1,aux2,10);
+			res.append(aux2);
+			res.append("\n");
+			cola[2].pop();
+			cola[0].pop();
+			aux++;
+    }
+	while(!cola[1].empty() && !cola[4].empty()){
+			itoa(cola[1].front()+1,aux2,10);
+			res.append(aux2);
+			res.append(" ");
+			itoa(cola[4].front()+1,aux2,10);
+			res.append(aux2);
+			res.append("\n");
+			cola[4].pop();
+			cola[1].pop();
+			aux++;
+	}		
+	while(!cola[3].empty() && !cola[5].empty()){
+			itoa(cola[3].front()+1,aux2,10);
+			res.append(aux2);
+			res.append(" ");
+			itoa(cola[5].front()+1,aux2,10);
+			res.append(aux2);
+			res.append("\n");
+			cola[5].pop();
+			cola[3].pop();
+			aux++;
+	}
+
+	for(int k=0 ; k<6 ; k++){
+		while(!cola[k].empty()){
+			for(int h=k+1 ; h<6 ; h++){
+				if(!cola[h].empty()){
+					for(int r=h+1 ; r<6 ; r++){
+						if(!cola[r].empty()){
+							itoa(cola[k].front()+1,aux2,10);
+							res.append(aux2);
+							res.append(" ");
+							itoa(cola[h].front()+1,aux2,10);
+							res.append(aux2);
+							res.append("\n");
+
+							itoa(cola[h].front()+1,aux2,10);
+							res.append(aux2);
+							res.append(" ");
+							itoa(cola[r].front()+1,aux2,10);
+							res.append(aux2);
+							res.append("\n");
+
+							cola[k].pop();
+							cola[h].pop();
+							cola[r].pop();
+							aux += 2;
+						}
+					}
+				}
+			}
+		}
+	}
+	cout << aux << endl;
+    cout << res;
+	return 0;
+}
