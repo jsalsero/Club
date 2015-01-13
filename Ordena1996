@@ -5,8 +5,7 @@ int n,aux;
 int arr[200007];
 int ord[200007];
 int cubeta[4];
-string res;
-char aux2[10];
+string res, aux2;
 queue<int> cola[6];
 
 int main()
@@ -15,11 +14,11 @@ int main()
 	int i=0;
 	while(i<n){
 		cin >> arr[i++];
-		cubeta[arr[i-1]]++;
-	}
+		cubeta[arr[i-1]]++;		
+	}		
 	i=0;
 	while(cubeta[1]--)
-		ord[i++]=1;
+		ord[i++]=1;		
 	while(cubeta[2]--)
 		ord[i++]=2;
 	while(cubeta[3]--)
@@ -38,75 +37,66 @@ int main()
 			if( arr[j]==3 && ord[j]==1)
 				cola[4].push(j);
 			if( arr[j]==3 && ord[j]==2)
-				cola[5].push(j);
+				cola[5].push(j);			
 		}
 	}
 
 	while(!cola[0].empty() && !cola[2].empty()){
-			itoa(cola[2].front()+1,aux2,10);
-			res.append(aux2);
-			res.append(" ");
-			itoa(cola[0].front()+1,aux2,10);
-			res.append(aux2);
-			res.append("\n");
+			ostringstream oss;
+			oss << cola[2].front()+1 << " " << cola[0].front()+1 << "\n";
+			res.append(oss.str());
 			cola[2].pop();
 			cola[0].pop();
 			aux++;
-    }
-	while(!cola[1].empty() && !cola[4].empty()){
-			itoa(cola[1].front()+1,aux2,10);
-			res.append(aux2);
-			res.append(" ");
-			itoa(cola[4].front()+1,aux2,10);
-			res.append(aux2);
-			res.append("\n");
+		}
+
+	while(!cola[1].empty() && !cola[4].empty()){			
+			ostringstream oss;
+			oss << cola[4].front()+1 << " " << cola[1].front()+1 << "\n";
+			res.append(oss.str());
 			cola[4].pop();
 			cola[1].pop();
 			aux++;
-	}		
-	while(!cola[3].empty() && !cola[5].empty()){
-			itoa(cola[3].front()+1,aux2,10);
-			res.append(aux2);
-			res.append(" ");
-			itoa(cola[5].front()+1,aux2,10);
-			res.append(aux2);
-			res.append("\n");
+		}
+	while(!cola[3].empty() && !cola[5].empty()){			
+			ostringstream oss;
+			oss << cola[5].front()+1 << " " << cola[3].front()+1 << "\n";
+			res.append(oss.str());
 			cola[5].pop();
 			cola[3].pop();
 			aux++;
-	}
-
-	for(int k=0 ; k<6 ; k++){
-		while(!cola[k].empty()){
-			for(int h=k+1 ; h<6 ; h++){
-				if(!cola[h].empty()){
-					for(int r=h+1 ; r<6 ; r++){
-						if(!cola[r].empty()){
-							itoa(cola[k].front()+1,aux2,10);
-							res.append(aux2);
-							res.append(" ");
-							itoa(cola[h].front()+1,aux2,10);
-							res.append(aux2);
-							res.append("\n");
-
-							itoa(cola[h].front()+1,aux2,10);
-							res.append(aux2);
-							res.append(" ");
-							itoa(cola[r].front()+1,aux2,10);
-							res.append(aux2);
-							res.append("\n");
-
-							cola[k].pop();
-							cola[h].pop();
-							cola[r].pop();
-							aux += 2;
-						}
-					}
-				}
-			}
 		}
+
+	while(!cola[0].empty() && !cola[4].empty() && !cola[3].empty()){
+		ostringstream oss;//actualizar despues del primer swap
+		oss << cola[0].front()+1 << " " << cola[4].front()+1 << "\n";
+		//res.append(oss.str());
+		cola[0].push(cola[4].front());
+		cola[4].push(cola[0].front());
+		cola[0].pop();
+		cola[4].pop();
+		oss << cola[4].front()+1 << " " << cola[3].front()+1 << "\n";		
+		res.append(oss.str());
+		cola[0].pop();
+		cola[4].pop();
+		cola[3].pop();
+		aux = aux+2;
 	}
-	cout << aux << endl;
-    cout << res;
+	while(!cola[2].empty() && !cola[1].empty() && !cola[5].empty()){
+		ostringstream oss;//actualizar despues del primer swap
+		oss << cola[2].front()+1 << " " << cola[1].front()+1 << "\n";
+		cola[2].push(cola[1].front());
+		cola[1].push(cola[2].front());
+		cola[2].pop();
+		cola[1].pop();
+		oss << cola[2].front()+1 << " " << cola[5].front()+1 << "\n";
+		res.append(oss.str());
+		cola[2].pop();
+		cola[1].pop();
+		cola[5].pop();
+		aux = aux+2;
+	}
+
+	cout << aux << "\n" << res;
 	return 0;
 }
