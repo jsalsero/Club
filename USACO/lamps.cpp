@@ -5,7 +5,7 @@ TASK: lamps
 */
 #include <bits/stdc++.h>
 using namespace std;
-
+ 
 int N,C;
 vector<int> on, off;
 
