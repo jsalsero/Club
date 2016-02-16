@@ -23,15 +23,12 @@ struct Trie{
 	}
 };
 
-//priority_queue<int, vector<int>, greater<int> > PQ;
 set<int> idxs;
 string S;
 int res, tam;
 
 void busca(Trie* t, int index) {		
-	//cout << index << endl;
 	if (t->es_palabra) {
-		//PQ.push(index);
 		idxs.insert(index);
 		res = max(res, index);		
 	}
@@ -64,11 +61,8 @@ int main() {
 	int index;
 	res = 0;
 
-	//PQ.push(0);	
 	idxs.insert(0);
 	while (idxs.size() != 0) {
-		//index = PQ.top();
-		//PQ.pop();
 		index = *idxs.begin();
 		idxs.erase(idxs.begin());
 		if (index == tam)
