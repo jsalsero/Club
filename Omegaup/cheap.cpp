@@ -7,7 +7,7 @@ struct FenTree {
     FenTree(int n) : tree(n + 1) {}
     
     void Actualizar(int i, int v) {
-        while (i < tree.size()) {
+        while (i < tree.size()) {        
             tree[i] += v;
             i += i & -i;
         }
@@ -21,82 +21,85 @@ struct FenTree {
         }
         return sum;
     }
-    
-    int Rango(int i, int j) {
-        return Query(j) -
-               Query(i - 1);
-    }
 };
 
 struct coche {
 	string nombre;
-	//char nombre[27] = "\0";
 	int low, hig;
 };
 
-map<int,int> M;
-int indice(int valor) { return distance(M.begin(), M.find(valor)); }
+#define mapeo(n) distance(V.begin(), lower_bound(V.begin(), V.end(), n))
 
+/*
 void debug() {
-	cout << "Mapa\n";
-	for (auto var : M) {
-		cout << var.first << ' ' << indice(var.first) << endl;
+	cout << "veamos las pos Q\n";
+	for (auto q : queries) {
+		cout << (mapeo(q)) << endl;
+		//varo.Actualizar(mapeo(q), varo.Query(mapeo(q)));
 	}
+
+	for (auto t : varo.tree) {
+		cout << t << ' ';
+	}
+	cout << endl;
+	for (auto v : V) {
+		cout << v << ' ';
+	}
+	cout << endl;
 }
+*/
 
 int main() {
+	string cad;
 	int N, Q, aux, count;
-	int queries[MAX];
-	char cad[27];
-	coche C[MAX];	
-
+	int low, hig;
+	vector<int> queries;	
+	vector<coche> C;
+	vector<int> V;
+	
 	cin.tie(0);
 	ios_base::sync_with_stdio(0);
 
-	//cin >> N;
-	scanf("%d", &N);
+	cin >> N;
 	for (int i = 0; i < N; i++) {		
-		//cin >> C[i].nombre >> C[i].low >> C[i].hig;
-		scanf("%s %d %d", cad, &C[i].low, &C[i].hig);
-		string aux(cad);
-		C[i].nombre = aux;
-		M[ C[i].low ]++;
-		M[ C[i].hig + 1 ]--;
+		cin >> cad >> low >> hig;
+		C.push_back({cad, low, hig + 1});
+		V.push_back(low);
+		V.push_back(hig + 1);
 	}
 
-	//cin >> Q;
-	scanf("%d", &Q);
+	cin >> Q;
 	for (int i = 0; i < Q; i++) {
-		//cin >> queries[i];
-		scanf("%d", &queries[i]);
-		M[queries[i]] += 0;
+		cin >> aux;
+		queries.push_back(aux);
+		V.push_back(aux);
 	}
 
-	//debug();
+	sort(V.begin(), V.end());
+	V.erase(unique(V.begin(), V.end()), V.end());
 
-	FenTree varo = FenTree(M.size());		
+	FenTree varo = FenTree(V.size());	
+	for (auto var : C) {
+		varo.Actualizar(mapeo(var.low) + 1, 1);
+		varo.Actualizar(mapeo(var.hig) + 1, -1);
+	}
 	
-	for (auto var : M) {
-		varo.Actualizar(indice(var.first) + 1, var.second);		
+	FenTree idx = FenTree(V.size());
+	count = 1;
+	for (auto var: C) {
+		idx.Actualizar(mapeo(var.low) + 1, count);
+		idx.Actualizar(mapeo(var.hig) + 1, -count);
+		count++;
 	}
 
-	FenTree idx = FenTree(M.size());	
-	for (int i = 0; i < N; i++) {
-		idx.Actualizar( indice(C[i].low) + 1, i + 1);
-		idx.Actualizar( indice(C[i].hig + 1) + 1, -(i + 1));
-	}
-
-	for (int i = 0; i < Q; i++) {
-		aux = varo.Query( indice(queries[i]) + 1);
+	for (auto q : queries) {
+		aux = varo.Query(mapeo(q) + 1);
 		if (aux == 0)
-			printf("NONE\n");
-			//cout << "NONE\n";
+			cout << "NONE\n";
 		else if (aux > 1)
-			printf("MULTIPLE\n");
-			//cout << "MULTIPLE\n";
+			cout << "MULTIPLE\n";
 		else {
-			printf("%s\n", C[idx.Query(indice(queries[i]) + 1) - 1].nombre.c_str());
-			//cout << C[idx.Query(indice(queries[i]) + 1) - 1].nombre << "\n";
+			cout << C[idx.Query(mapeo(q) + 1) - 1].nombre << "\n";
 		}
 	}
 	return 0;
