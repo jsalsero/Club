@@ -38,8 +38,8 @@ struct SegTree {
     }
 
     T ActualizarRango(int l, int r) {
-        if (r < i || d < l) return T();
         propagate();
+        if (r < i || d < l) return dato;
         if (l <= i && d <= r) {
             dato = dato >> 1;
             if (izq) {
