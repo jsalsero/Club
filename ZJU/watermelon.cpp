@@ -2,9 +2,8 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-const int INF = 1 << 30;
-const int MAXN = 150001;
 typedef long long Long;
+const Long INF = 1000000L*150000L;
 
 template<class T>
 struct SegTree {
@@ -30,7 +29,7 @@ struct SegTree {
     }
 
     T Actualizar(int a, T v) {
-    	if (a < i || d < a) return T();
+    	if (a < i || d < a) return dato;
     	if (a == i && d == a) return dato = min(dato, v);
     	if (!izq) {
     		int m = (i + d) >> 1;
@@ -87,8 +86,7 @@ int main() {
 			Melon aux = tree.Query(i - 1, N - 1);
             tree.Actualizar(min(i + tiempo[i] - 1, N - 1), aux + V[i]);
 		}
-        Long res = tree.Query(N - 1, N - 1).precio;
-        cout << res << "\n";
+        cout << tree.Query(N - 1, N - 1).precio << "\n";
 	}
 	return 0;
 }
@@ -96,10 +94,8 @@ int main() {
 4
 10 20 1 40
 3 2 3 1
-
 4
 100000 100000 100000 100000
 1 1 1 1 
-
 
 */
