@@ -1,18 +1,19 @@
-// 14 15
 #include <iostream>
 #include <vector>
 #include <algorithm>
 using namespace std;
-const int INF = 1000000000;
+const int INF = 1 << 30;
+const int MAXN = 150001;
+typedef long long Long;
 
 template<class T>
 struct SegTree {
-	T dato, lazy; int i, d;
+	T dato; int i, d;
 	SegTree* izq, *der;
 
 	SegTree(int I, int D) 
 		: izq(NULL), der(NULL),
-		  i(I), d(D), dato(), lazy(0) {}
+		  i(I), d(D), dato() {}
     
     ~SegTree() {
     	if (izq) delete izq;
@@ -29,8 +30,8 @@ struct SegTree {
     }
 
     T Actualizar(int a, T v) {
-    	if (a < i || d < a) return dato;
-    	if (a == i || d == a) return dato = min(dato, v);
+    	if (a < i || d < a) return T();
+    	if (a == i && d == a) return dato = min(dato, v);
     	if (!izq) {
     		int m = (i + d) >> 1;
     		izq = new SegTree(i, m);
@@ -40,35 +41,8 @@ struct SegTree {
     				  der->Actualizar(a, v));
     }
 
-    void propagate() {
-    	if (lazy.precio != 0) {
-    		dato = min(dato, lazy);
-    		if (izq) {
-    			izq->lazy = min(izq->lazy, lazy);
-    			der->lazy = min(der->lazy, lazy);
-    		}
-    		lazy = 0;
-    	}
-    }
-
-    T ActualizarRango(int a, int b, T v) {
-    	propagate();
-    	if (b < i || d < a) return T();
-    	if (a <= i && d <= b) {
-    		dato = min(dato, v);
-    		if (izq) {
-    			izq->lazy = min(izq->lazy, lazy);
-    			der->lazy = min(der->lazy, lazy);
-    		}
-    		return dato;
-    	}
-    	return dato = min(izq->ActualizarRango(a, b, v),
-    				  der->ActualizarRango(a, b, b));
-    }
-
     T Query(int a, int b) {
     	if (b < i || d < a) return T();
-    	propagate();
     	if (a <= i && d <= b) return dato;
     	return izq? min(izq->Query(a, b),
     				der->Query(a, b)): T();
@@ -76,8 +50,8 @@ struct SegTree {
 };
 
 struct Melon {
-	int precio;
-	Melon(int P) : precio(P) {}
+	Long precio;
+	Melon(Long P) : precio(P) {}
 	Melon() : precio(INF) {}
 	Melon operator+(const Melon& o) {
 		return Melon(precio + o.precio);
@@ -88,36 +62,33 @@ struct Melon {
 };
 
 int main() {
-	int N, num;
+	Long N, num;
+
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
 	while (cin >> N) {
 		vector<Melon> V;
-		vector<int> tiempo;
+		vector<Long> tiempo;
 		for (int i = 0; i < N; ++i) {
 			cin >> num;
-			V.push_back({num});
+			V.push_back(Melon(num));
 		}
+
 		for (int i = 0; i < N; ++i) {
 			cin >> num;
 			tiempo.push_back(num);
 		}
 
 		SegTree<Melon> tree(0, N - 1);
-		tree.Construir();
 
-		for (int i = 0; i < N; ++i) {
-			int aux = tree.Query(i, i).precio;
-			cout << "valor actual " << aux << endl;
-			if (aux == INF)
-				tree.ActualizarRango(i, min(N - 1, i + tiempo[i] - 1), V[i]);
-				//tree.Actualizar(i, V[i]);
-			else				
-				tree.ActualizarRango(i, min(N - 1, i + tiempo[i] - 1), V[i] + aux);
-				//tree.Actualizar(i, V[i] + aux);
+        tree.Actualizar(min(tiempo[0] - 1, N - 1), V[0]);
+		for (int i = 1; i < N; ++i) {
+			Melon aux = tree.Query(i - 1, N - 1);
+            tree.Actualizar(min(i + tiempo[i] - 1, N - 1), aux + V[i]);
 		}
-		for (int i = 0; i < N; i++)
-			cout << tree.Query(i, i).precio << endl;
-		cout << endl << endl << endl;
-		cout << tree.Query(N - 1, N - 1).precio;
+        Long res = tree.Query(N - 1, N - 1).precio;
+        cout << res << "\n";
 	}
 	return 0;
 }
@@ -125,5 +96,10 @@ int main() {
 4
 10 20 1 40
 3 2 3 1
+
+4
+100000 100000 100000 100000
+1 1 1 1 
+
 
 */
