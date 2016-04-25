@@ -3,7 +3,7 @@
 #include <algorithm>
 using namespace std;
 typedef long long Long;
-const Long INF = 1000000L*150000L;
+const Long INF = 1L << 60L;
 
 template<class T>
 struct SegTree {
