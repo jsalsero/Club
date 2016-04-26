@@ -6,7 +6,7 @@ struct Trie {
 
 	void Agregar(const int& a) {
 		Trie* cabeza = this;
-		for (int i = 0; i < 31; ++i) {
+		for (int i = 31; i >= 0; --i) {
 			int val = (a & 1<<i)? 1: 0;
 			if (cabeza->sig.find(val) == cabeza->sig.end())
 				cabeza->sig[val] = new Trie();
@@ -15,44 +15,41 @@ struct Trie {
 	}
 
 	
-	int Query(const int& n) {
+	inline int Query(const int& n) {
 		Trie* cabeza = this;
 		int ans = 0;
-		for (int i = 0; i < 31; ++i) {
-			int val = (n & 1<<i)? 1: 0;			
+		for (int i = 31; i >= 0; --i) {
+			int val = (n & 1<<i)? 1: 0;
 			if (cabeza->sig.find(1 - val) == cabeza->sig.end())
 				cabeza = cabeza->sig[val];
 			else {
 				cabeza = cabeza->sig[1 - val];
 				ans += (1<<i);
 			}
-
 		}
+		return ans;
 	}	
 };
 
 int Query(Trie* t, const int& n) {
-		int ans = 0;
-		for (int i = 0; i < 31; ++i) {
-			int val = (n & 1<<i)? 1: 0;			
-			if (t->sig.find(1 - val) == t->sig.end())
-				t = t->sig[val];
-			else {
-				t = t->sig[1 - val];
-				ans += (1<<i);
-			}
-
+	int ans = 0;
+	for (int i = 0; i < 31; ++i) {
+		int val = (n & 1<<i)? 1: 0;			
+		if (t->sig.find(1 - val) == t->sig.end())
+			t = t->sig[val];
+		else {
+			t = t->sig[1 - val];
+			ans += (1<<i);
 		}
+
 	}
+}
 
 int main() {
 	int T, N, num;
-	/*
-	for (int i = 0; i < 10; i++) {
-		int val = (19 & 1<<i)? 1: 0;
-		cout << val;
-	}
-	*/
+
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
 
 	cin >> T;
 	while (T--) {
@@ -64,12 +61,10 @@ int main() {
 		for (int i = 0; i < N; ++i) {
 			cin >> num;
 			prefix ^= num;
-			cout << "-- " << prefix << endl;
-			xors->Agregar(prefix);
-			//ans = max(ans, Query(xors, prefix));
 			ans = max(ans, xors->Query(prefix));
+			xors->Agregar(prefix);
 		}
-		cout << ans << "\n";
+		cout << ans << '\n';
 	}
 	return 0;
 }
