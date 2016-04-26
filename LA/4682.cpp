@@ -2,25 +2,24 @@
 using namespace std;
 
 struct Trie {
-	map<int, Trie*> sig;
+	Trie* sig[2];
 
 	void Agregar(const int& a) {
 		Trie* cabeza = this;
 		for (int i = 31; i >= 0; --i) {
 			int val = (a & 1<<i)? 1: 0;
-			if (cabeza->sig.find(val) == cabeza->sig.end())
+			if (cabeza->sig[val] == NULL)
 				cabeza->sig[val] = new Trie();
 			cabeza = cabeza->sig[val];
 		}
 	}
-
 	
 	inline int Query(const int& n) {
 		Trie* cabeza = this;
 		int ans = 0;
 		for (int i = 31; i >= 0; --i) {
 			int val = (n & 1<<i)? 1: 0;
-			if (cabeza->sig.find(1 - val) == cabeza->sig.end())
+			if (cabeza->sig[1 - val] == NULL)
 				cabeza = cabeza->sig[val];
 			else {
 				cabeza = cabeza->sig[1 - val];
@@ -30,20 +29,6 @@ struct Trie {
 		return ans;
 	}	
 };
-
-int Query(Trie* t, const int& n) {
-	int ans = 0;
-	for (int i = 0; i < 31; ++i) {
-		int val = (n & 1<<i)? 1: 0;			
-		if (t->sig.find(1 - val) == t->sig.end())
-			t = t->sig[val];
-		else {
-			t = t->sig[1 - val];
-			ans += (1<<i);
-		}
-
-	}
-}
 
 int main() {
 	int T, N, num;
