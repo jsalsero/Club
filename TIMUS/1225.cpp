@@ -7,7 +7,7 @@ const int MAX = 50;
 int N;
 Long memo[MAX][4];
 Long solve(int pos, int flag) {
-	if (pos == N)				return !flag;
+	if (pos == N)			return !flag;
 	if (memo[pos][flag] != -1) 	return memo[pos][flag];
 
 	Long res = 0;
