@@ -34,7 +34,6 @@ int main(){
     while (t--){
         cin >> cad;
         cout << "Case #" << ++T << ": " << F(0, cad.size() - 1) << "\n";
-        //printf("Case #%d: %d\n", ++T, F(0, cad.size() - 1));
     }
     return 0;
 }
