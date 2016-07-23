@@ -1,14 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define RESTA pre[V[pos] - i]
+#define SUMA  pre[V[pos] + i]
 
 vector<int> primos = {2,3,5,7,11,13,17,19,23,29,31,37};
-
-int check(int n, int mask) {
-	int res = 0;
-	for (int i = 0; primos[i] <= n; i++)
-		if (n % primos[i] == 0) res |= (1<<i);
-	return res;
-}
+vector<int> pre = {0,0,1,2,1,4,3,8,1,2,5,16,3,32,9,6,1,64,3,128,5,10,17,256,3,4,33,2,9,512,7,1024,1,18,65,12,3,2048,129,34};
 
 int n;
 vector<int> V(101);
@@ -19,14 +15,11 @@ int dp(int pos, int mask) {
 	if (tabla != -1) tabla;
 	int ans = 1<<30;
 	
-	for (int i = 0; V[pos] - i >= 1; i++) {
-		int factoriza = check(V[pos] - i, mask);
-		if ((factoriza&mask) == 0)
-			ans = min(ans, dp(pos + 1, factoriza|mask) + i);
-        
-        factoriza = check(V[pos] + i, mask);
-        if ((factoriza&mask) == 0)
-            ans = min(ans, dp(pos + 1, factoriza|mask) + i);
+	for (int i = 0; V[pos] - i >= 1; i++) {	
+		if ((RESTA&mask) == 0)
+			ans = min(ans, dp(pos + 1, RESTA|mask) + i);        
+        if ((SUMA&mask) == 0)
+            ans = min(ans, dp(pos + 1, SUMA|mask) + i);
 	}
 	return tabla = ans;
 }
@@ -35,19 +28,17 @@ void print_dp(int pos, int mask) {
 	if (pos == n) return;
 	
 	for (int i = 0; V[pos] - i >= 1; i++) {
-		int factoriza = check(V[pos] - i, mask);
-		if ((factoriza&mask) == 0 && 
-			(dp(pos + 1, factoriza|mask) + i) == memo[pos][mask]) {
+		if ((RESTA&mask) == 0 && 
+			(dp(pos + 1, RESTA|mask) + i) == memo[pos][mask]) {
 			cout << V[pos] - i << " ";
-			print_dp(pos + 1, factoriza|mask);
+			print_dp(pos + 1, RESTA|mask);
 			return;
 		}
 
-        factoriza = check(V[pos] + i, mask);
-        if ((factoriza&mask) == 0 && 
-            (dp(pos + 1, factoriza|mask) + i) == memo[pos][mask]) {
+        if ((SUMA&mask) == 0 && 
+            (dp(pos + 1, SUMA|mask) + i) == memo[pos][mask]) {
             cout << V[pos] + i << " ";
-            print_dp(pos + 1, factoriza|mask);
+            print_dp(pos + 1, SUMA|mask);
             return;
         }
 	}
