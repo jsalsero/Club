@@ -10,30 +10,30 @@ int n;
 vector<int> V(101);
 int memo[101][4100];
 int dp(int pos, int mask) {
-	if (pos == n)	return 0;
-	int &tabla = memo[pos][mask];
-	if (tabla != -1) tabla;
-	int ans = 1<<30;
-	
-	for (int i = 0; V[pos] - i >= 1; i++) {	
-		if ((RESTA&mask) == 0)
-			ans = min(ans, dp(pos + 1, RESTA|mask) + i);        
+    if (pos == n)   return 0;
+    int &tabla = memo[pos][mask];
+    if (tabla != -1) tabla;
+    int ans = 1<<30;
+    
+    for (int i = 0; V[pos] - i >= 1; i++) { 
+        if ((RESTA&mask) == 0)
+            ans = min(ans, dp(pos + 1, RESTA|mask) + i);        
         if ((SUMA&mask) == 0)
             ans = min(ans, dp(pos + 1, SUMA|mask)  + i);
-	}
-	return tabla = ans;
+    }
+    return tabla = ans;
 }
 
 void print_dp(int pos, int mask) {
-	if (pos == n) return;
-	
-	for (int i = 0; V[pos] - i >= 1; i++) {
-		if ((RESTA&mask) == 0 && 
-			(dp(pos + 1, RESTA|mask) + i) == memo[pos][mask]) {
-			cout << V[pos] - i << " ";
-			print_dp(pos + 1, RESTA|mask);
-			return;
-		}
+    if (pos == n) return;
+    
+    for (int i = 0; V[pos] - i >= 1; i++) {
+        if ((RESTA&mask) == 0 && 
+            (dp(pos + 1, RESTA|mask) + i) == memo[pos][mask]) {
+            cout << V[pos] - i << " ";
+            print_dp(pos + 1, RESTA|mask);
+            return;
+        }
 
         if ((SUMA&mask) == 0 && 
             (dp(pos + 1, SUMA|mask) + i) == memo[pos][mask]) {
@@ -41,7 +41,7 @@ void print_dp(int pos, int mask) {
             print_dp(pos + 1, SUMA|mask);
             return;
         }
-	}
+    }
 }
 
 void init() {
@@ -51,18 +51,18 @@ void init() {
 }
 
 int main() {
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);	
-	int caso = 1;
-	while (cin >> n && n != 0) {
-		init();
-		for (int i = 0; i < n; ++i)	cin >> V[i];
-		cout << "Case #" << caso++ << ": ";
-		int ans = dp(0, 0);
-		print_dp(0, 0);
-		cout << "\n";
-	}
-	return 0;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); 
+    int caso = 1;
+    while (cin >> n && n != 0) {
+        init();
+        for (int i = 0; i < n; ++i) cin >> V[i];
+        cout << "Case #" << caso++ << ": ";
+        int ans = dp(0, 0);
+        print_dp(0, 0);
+        cout << "\n";
+    }
+    return 0;
 }
 /*
 4
