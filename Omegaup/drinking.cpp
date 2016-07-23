@@ -8,7 +8,7 @@ vector<int> pre = {0,0,1,2,1,4,3,8,1,2,5,16,3,32,9,6,1,64,3,128,5,10,17,256,3,4,
 
 int n;
 vector<int> V(101);
-int memo[101][5000];
+int memo[101][4100];
 int dp(int pos, int mask) {
 	if (pos == n)	return 0;
 	int &tabla = memo[pos][mask];
@@ -19,7 +19,7 @@ int dp(int pos, int mask) {
 		if ((RESTA&mask) == 0)
 			ans = min(ans, dp(pos + 1, RESTA|mask) + i);        
         if ((SUMA&mask) == 0)
-            ans = min(ans, dp(pos + 1, SUMA|mask) + i);
+            ans = min(ans, dp(pos + 1, SUMA|mask)  + i);
 	}
 	return tabla = ans;
 }
@@ -44,16 +44,19 @@ void print_dp(int pos, int mask) {
 	}
 }
 
-int main() {	
+void init() {
+    for (int i = 0; i < 101; i++)
+        for (int j = 0; j < 4100; j++)
+            memo[i][j] = -1;
+}
+
+int main() {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);	
 	int caso = 1;
 	while (cin >> n && n != 0) {
-		for (int i = 0; i < 101; i++)
-			for (int j = 0; j < 5000; j++)
-				memo[i][j] = -1;
+		init();
 		for (int i = 0; i < n; ++i)	cin >> V[i];
-		//cout << dp(0, 0) << "\n";
 		cout << "Case #" << caso++ << ": ";
 		int ans = dp(0, 0);
 		print_dp(0, 0);
