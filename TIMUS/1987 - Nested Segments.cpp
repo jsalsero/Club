@@ -4,36 +4,36 @@ using namespace std;
 #define pii pair<int, int>
 
 int main() {
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	int n;
-	cin >> n;
-	vector<pii> seg(n);
-	for (int i = 0; i < n; ++i)
-		cin >> seg[i].first >> seg[i].second;
-	
-	int q;
-	cin >> q;
-	stack<pii> pila;
-	int izq = 0;
-	for (int i = 0; i < q; ++i) {
-		int point;
-		cin >> point;
-		while (izq < seg.size() && seg[izq].first <= point) {
-			pila.push(pii(seg[izq].second, izq + 1));
-			izq++;
-		}
-		int ans = -1;
-		while (!pila.empty() && ans == -1) {
-			if (point <= pila.top().first)
-				ans = pila.top().second;
-			else
-				pila.pop();
-		}
-		cout << ans << "\n";
-	}
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int n;
+    cin >> n;
+    vector<pii> seg(n);
+    for (int i = 0; i < n; ++i)
+        cin >> seg[i].first >> seg[i].second;
+    
+    int q;
+    cin >> q;
+    stack<pii> pila;
+    int izq = 0;
+    for (int i = 0; i < q; ++i) {
+        int point;
+        cin >> point;
+        while (izq < seg.size() && seg[izq].first <= point) {
+            pila.push(pii(seg[izq].second, izq + 1));
+            izq++;
+        }
+        int ans = -1;
+        while (!pila.empty() && ans == -1) {
+            if (point <= pila.top().first)
+                ans = pila.top().second;
+            else
+                pila.pop();
+        }
+        cout << ans << "\n";
+    }
 
-	return 0;
+    return 0;
 }
 /*
 3
