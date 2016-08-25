@@ -13,7 +13,7 @@ struct Grafo {
 	vector<Long> depth;
 	Grafo(Long N, bool B = true)
 		: n(N), bi(B), ady(N), parte_ciclo(N, -1), vis(N, false), raices(N),
-		depth(N), padre(LN, vector<Long>(N)) {}
+		depth(N, -1), padre(LN, vector<Long>(N, -1)) {}
 
 	void Conecta(Long u, Long v) {
 		if (bi) ady[v].push_back(u);
@@ -53,7 +53,6 @@ struct Grafo {
 			for (Long j = 0; j < ciclos[i].size(); ++j)
 				parte_ciclo[ ciclos[i][j] ] = i;
 
-		init();
 		for (Long i = 0; i < ciclos.size(); ++i)
 			for (Long j = 0; j < ciclos[i].size(); ++j)
 				dfs(ciclos[i][j], -1, 0, ciclos[i][j]);
@@ -89,14 +88,6 @@ struct Grafo {
 				v = padre[i][v];
 			}
 		return padre[0][u];
-	}
-
-	void init() {
-		for (Long i = 0; i < n; i++)
-			depth[i] = -1;
-		for (Long i = 0; i < LN; ++i)
-			for (Long j = 0; j < n; ++j)
-				padre[i][j] = -1;
 	}
 
 	void Construir() {
