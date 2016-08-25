@@ -1,31 +1,32 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-typedef long long Long;
-const Long LN = 17;
-struct Grafo {
-	Long n; bool bi;	
-	vector<vector<Long>> ady;
-	vector<Long> parte_ciclo;
-	vector<Long> raices;
-	vector<bool> vis;
-	vector<vector<Long>> padre;
-	vector<Long> depth;
-	Grafo(Long N, bool B = true)
-		: n(N), bi(B), ady(N), parte_ciclo(N, -1), raices(N),
-		depth(N, -1), padre(LN, vector<Long>(N, -1)) {}
+const int LN = 17;
 
-	void Conecta(Long u, Long v) {
+struct Grafo {
+	int n; bool bi;	
+	vector<vector<int>> ady;
+	vector<int> parte_ciclo;
+	vector<int> raices;
+	vector<bool> vis;
+	vector<vector<int>> padre;
+	vector<int> depth;
+	map<int, int> M;
+	Grafo(int N, bool B = true)
+		: n(N), bi(B), ady(N), parte_ciclo(N, -1), raices(N),
+		depth(N, -1), padre(LN, vector<int>(N, -1)) {}
+
+	void Conecta(int u, int v) {
 		if (bi) ady[v].push_back(u);
 		ady[u].push_back(v);
 	}
 
-	vector<Long> ciclo;
+	vector<int> ciclo;
 	vector<char> color;
 
-	void DetectarCiclo(Long u, Long p) {
+	void DetectarCiclo(int u, int p) {
 		color[u] = ciclo.empty()? 'G' : 'N';
-		for (Long v : ady[u]) {
+		for (int v : ady[u]) {
 			if (bi && v == p) continue;
 			if (ciclo.empty() && color[v] == 'G')
 				color[v] = 'A', ciclo.push_back(v),
@@ -39,22 +40,24 @@ struct Grafo {
 		if (color[u] == 'G') color[u] = 'N';
 	}
 
-	vector<vector<Long>> DetectarCiclos() {
-		vector<vector<Long>> ciclos;
+	vector<vector<int>> DetectarCiclos() {
+		vector<vector<int>> ciclos;
 		color = vector<char>(n, 'B');
-		for (Long u = 0; u < n; ++u) {
+		for (int u = 0; u < n; ++u) {
 			if (color[u] != 'B') continue;
 			ciclo.clear(); DetectarCiclo(u, u);
 			reverse(ciclo.begin(), ciclo.end());
 			if (ciclo.size() > 0) ciclos.push_back(ciclo);
 		}
 
-		for (Long i = 0; i < ciclos.size(); ++i)
-			for (Long j = 0; j < ciclos[i].size(); ++j)
+		for (int i = 0; i < ciclos.size(); ++i)
+			for (int j = 0; j < ciclos[i].size(); ++j) {
 				parte_ciclo[ ciclos[i][j] ] = i;
+				M[ ciclos[i][j] ] = j;
+			}
 
-		for (Long i = 0; i < ciclos.size(); ++i)
-			for (Long j = 0; j < ciclos[i].size(); ++j)
+		for (int i = 0; i < ciclos.size(); ++i)
+			for (int j = 0; j < ciclos[i].size(); ++j)
 				dfs(ciclos[i][j], -1, 0, ciclos[i][j]);
 		Construir();
 
@@ -63,25 +66,25 @@ struct Grafo {
 		return ciclos;
 	}
 
-	void dfs(Long s, Long parent, Long d, int raiz) {
+	void dfs(int s, int parent, int d, int raiz) {
 		//cout << "  " << s << " -> " << d << endl;
 		padre[0][s] = parent;
 		depth[s] = d;
 		raices[s] = raiz;
 
-		for (Long v : ady[s]) if (depth[v] == -1 && parte_ciclo[v] == -1)
+		for (int v : ady[s]) if (depth[v] == -1 && parte_ciclo[v] == -1)
 			dfs(v, s, d + 1, raiz);
 	}
 
-	Long LCA(Long u, Long v) {
+	int LCA(int u, int v) {
 		if (depth[u] < depth[v]) swap(u, v);
-		for (Long i = LN; i >= 0; --i)
+		for (int i = LN; i >= 0; --i)
 			if (depth[u] - (1<<i) >= depth[v])
 				u = padre[i][u];
 
 		if (u == v) return u;
 
-		for (Long i = LN - 1; i >= 0; --i)
+		for (int i = LN - 1; i >= 0; --i)
 			if (padre[i][u] != -1 &&
 				padre[i][u] != padre[i][v]) {
 				u = padre[i][u];
@@ -91,29 +94,29 @@ struct Grafo {
 	}
 
 	void Construir() {
-		for (Long i = 1; i < LN; ++i)
-			for (Long j = 0; j < n; ++j)
+		for (int i = 1; i < LN; ++i)
+			for (int j = 0; j < n; ++j)
 				if (padre[i - 1][j] != -1)
 					padre[i][j] = padre[i - 1][ padre[i - 1][j] ];
 	}
 };
 
 struct UF {
-	Long n; vector<Long> padre, tam;
+	int n; vector<int> padre, tam;
 
-	UF(Long N) : n(N),
+	UF(int N) : n(N),
 		tam(N, 1), padre(N) {
 		while (--N) padre[N] = N;
 	}
 
-	Long raiz(Long u) {
+	int raiz(int u) {
 		if (padre[u] == u) return u;
 		return padre[u] = raiz(padre[u]);
 	}
 
-	void unir(Long u, Long v) {
-		Long ru = raiz(u);
-		Long rv = raiz(v);
+	void unir(int u, int v) {
+		int ru = raiz(u);
+		int rv = raiz(v);
 		if (ru == rv) return;
 		--n, padre[ru] = rv;
 		tam[rv] += tam[ru];
@@ -123,22 +126,22 @@ struct UF {
 int main() {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
-	Long n;
+	int n;
 	while (cin >> n) {
 		UF arboles(n);
 		Grafo g(n, false);
-		for (Long i = 0; i < n; ++i) {
-			Long num;
+		for (int i = 0; i < n; ++i) {
+			int num;
 			cin >> num;
 			arboles.unir(i, num - 1);
 			g.Conecta(num - 1, i);
 		}
 		auto ciclos = g.DetectarCiclos();		
 
-		Long Q;
+		int Q;
 		cin >> Q;
 		while(Q--) {
-			Long a, b;
+			int a, b;
 			cin >> a >> b;
 			a--;
 			b--;
@@ -149,12 +152,12 @@ int main() {
 			}
 
 			if (g.raices[a] != g.raices[b]) {
-				Long raizA = g.raices[a];
-				Long raizB = g.raices[b];
-				Long idx_ciclo = g.parte_ciclo[raizA];
-				Long posA = lower_bound(ciclos[idx_ciclo].begin(), ciclos[idx_ciclo].end(), raizA) - ciclos[idx_ciclo].begin();
-				Long posB = lower_bound(ciclos[idx_ciclo].begin(), ciclos[idx_ciclo].end(), raizB) - ciclos[idx_ciclo].begin();
-				Long centro = min((Long)ciclos[idx_ciclo].size() - abs(posB - posA), abs(posA - posB));
+				int raizA = g.raices[a];
+				int raizB = g.raices[b];
+				int posA = g.M[raizA];
+				int posB = g.M[raizB];
+				int idx_ciclo = g.parte_ciclo[raizA];
+				int centro = min((int)ciclos[idx_ciclo].size() - abs(posB - posA), abs(posA - posB));
 				//cout << "diff arboles " << g.depth[a] + g.depth[b] + centro << "\n";
 				cout << g.depth[a] + g.depth[b] + centro << "\n";
 			} else { // LCA
