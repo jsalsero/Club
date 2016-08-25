@@ -12,7 +12,7 @@ struct Grafo {
 	vector<vector<Long>> padre;
 	vector<Long> depth;
 	Grafo(Long N, bool B = true)
-		: n(N), bi(B), ady(N), parte_ciclo(N, -1), vis(N, false), raices(N),
+		: n(N), bi(B), ady(N), parte_ciclo(N, -1), raices(N),
 		depth(N, -1), padre(LN, vector<Long>(N, -1)) {}
 
 	void Conecta(Long u, Long v) {
