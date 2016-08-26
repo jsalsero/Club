@@ -39,13 +39,10 @@ int main() {
             for (int j = 0; j < n; ++j) {
                 char c;
                 cin >> c;
-                if (c == 'H') {
-                    ver[pos] = true;
-                    ver[pos + 1] = true;
-                } else {
-                    hor[pos] = true;
-                    hor[pos + 2*n + 1] = true;
-                }
+                if (c == 'H')
+                    ver[pos] = ver[pos + 1] = true;
+                else
+                    hor[pos] = hor[pos + 2*n + 1] = true;
                 pos += 2;
             }
             pos = pos + (impar ? 2 : 0); 
