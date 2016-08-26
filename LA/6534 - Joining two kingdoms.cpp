@@ -5,9 +5,10 @@ const int INF = 1<<30;
 typedef long long Long;
 struct Grafo {
 	int n; bool bi;
+	int diam;
 	vector<vector<int>> ady;
 	Grafo(int N, bool B = true)
-		: n(N), bi(B), ady(N) {}
+		: n(N), bi(B), ady(N), diam(0) {}
 
 	void Conecta(int u, int v) {
 		if (bi) ady[v].push_back(u);
@@ -26,6 +27,29 @@ struct Grafo {
 				q.push(v);
 		}
 		return d;
+	}
+
+	vector<int> distancias() {
+		auto pr = BFS(0);
+		int lejos = -1;
+		int raiz;
+		for (int i = 0; i < pr.size(); ++i)
+			if (lejos < pr[i])
+				lejos = pr[i], raiz = i;
+
+		diam = lejos;
+		auto d = BFS(raiz);
+		lejos = -1;
+		for (int i = 0; i < d.size(); ++i)
+			if (lejos < d[i])
+				lejos = d[i], raiz = i;
+		
+		auto d2 = BFS(raiz);
+		
+		vector<int> ans(n);
+		for (int i = 0; i < n; i++)
+			ans[i] = max(d[i], d2[i]);
+		return ans;
 	}
 };
 
@@ -47,38 +71,12 @@ int main() {
 			a--, b--;
 			red.Conecta(a, b);
 		}
-		vector<int> dist = blue.BFS(0);
-		int lejos = -1;
-		int raiz;
-		for (int i = 0; i < dist.size(); i++) {
-			if (dist[i] > lejos)
-				lejos = dist[i],
-				raiz = i;
-		}
-
-		//int diam1 = lejos;
-		dist = blue.BFS(raiz);
-		sort(dist.begin(), dist.end());
-		int diam1 = dist.back();
-		vector<int> IZQ(N);
-		for (int i = 0; i < dist.size(); i++)
-			IZQ[i] = max(dist[i], abs(diam1 - dist[i]));
 		
-		dist = red.BFS(0);
-		lejos = -1;
-		for (int i = 0; i < dist.size(); i++) {
-			if (dist[i] > lejos)
-				lejos = dist[i],
-				raiz = i;
-		}			
-
-		dist = red.BFS(raiz);
-		sort(dist.begin(), dist.end());
-		int diam2 = dist.back();		
-		vector<int> DER(Q);
-		for (int i = 0; i < dist.size(); ++i)
-			DER[i] = max(dist[i], diam2 - dist[i]);
+		vector<int> IZQ = blue.distancias();
+		vector<int> DER = red.distancias();
 		sort(DER.begin(), DER.end());
+		int diam1 = blue.diam;
+		int diam2 = red.diam;
 		
 		vector<int> acumula(DER.size() + 7);
 		for (int i = 0; i < DER.size(); ++i)
