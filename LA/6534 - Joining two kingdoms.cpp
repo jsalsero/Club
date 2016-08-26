@@ -4,24 +4,24 @@ using namespace std;
 const int INF = 1<<30;
 typedef long long Long;
 struct Grafo {
-	int n; bool bi;
-	int diam;
-	vector<vector<int>> ady;
-	Grafo(int N, bool B = true)
+	Long n; bool bi;
+	Long diam;
+	vector<vector<Long>> ady;
+	Grafo(Long N, bool B = true)
 		: n(N), bi(B), ady(N), diam(0) {}
 
-	void Conecta(int u, int v) {
+	void Conecta(Long u, Long v) {
 		if (bi) ady[v].push_back(u);
 		ady[u].push_back(v);
 	}
 
-	vector<int> BFS(int s) {
-		queue<int> q;
-		vector<int> d(n, INF);
+	vector<Long> BFS(Long s) {
+		queue<Long> q;
+		vector<Long> d(n, INF);
 		q.push(s), d[s] = 0;
 		while (!q.empty()) {
-			int u = q.front(); q.pop();
-			for (int v : ady[u])
+			Long u = q.front(); q.pop();
+			for (Long v : ady[u])
 				if (d[u] + 1 < d[v])
 					d[v] = d[u] + 1,
 				q.push(v);
@@ -29,25 +29,25 @@ struct Grafo {
 		return d;
 	}
 
-	vector<int> distancias() {
+	vector<Long> distancias() {
 		auto pr = BFS(0);
-		int lejos = -1;
-		int raiz;
-		for (int i = 0; i < pr.size(); ++i)
+		Long lejos = -1;
+		Long raiz;
+		for (Long i = 0; i < pr.size(); ++i)
 			if (lejos < pr[i])
 				lejos = pr[i], raiz = i;
 
 		diam = lejos;
 		auto d = BFS(raiz);
 		lejos = -1;
-		for (int i = 0; i < d.size(); ++i)
+		for (Long i = 0; i < d.size(); ++i)
 			if (lejos < d[i])
 				lejos = d[i], raiz = i;
 		
 		auto d2 = BFS(raiz);
 		
-		vector<int> ans(n);
-		for (int i = 0; i < n; i++)
+		vector<Long> ans(n);
+		for (Long i = 0; i < n; i++)
 			ans[i] = max(d[i], d2[i]);
 		return ans;
 	}
@@ -56,36 +56,36 @@ struct Grafo {
 int main() {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
-	int N, Q;
+	Long N, Q;
 	while (cin >> N >> Q) {
 		Grafo blue(N), red(Q);
-		for (int i = 1; i < N; ++i) {
-			int a, b;
+		for (Long i = 1; i < N; ++i) {
+			Long a, b;
 			cin >> a >> b;
 			a--, b--;
 			blue.Conecta(a, b);
 		}
-		for (int i = 1; i < Q; ++i) {
-			int a, b;
+		for (Long i = 1; i < Q; ++i) {
+			Long a, b;
 			cin >> a >> b;
 			a--, b--;
 			red.Conecta(a, b);
 		}
 		
-		vector<int> IZQ = blue.distancias();
-		vector<int> DER = red.distancias();
+		vector<Long> IZQ = blue.distancias();
+		vector<Long> DER = red.distancias();
 		sort(DER.begin(), DER.end());
-		int diam1 = blue.diam;
-		int diam2 = red.diam;
+		Long diam1 = blue.diam;
+		Long diam2 = red.diam;
 		
-		vector<int> acumula(DER.size() + 7);
-		for (int i = 0; i < DER.size(); ++i)
+		vector<Long> acumula(DER.size() + 7);
+		for (Long i = 0; i < DER.size(); ++i)
 			acumula[i + 1] = acumula[i] + DER[i];
 
-		Long acc = 0;
-		int diametroG = max(diam1, diam2);
+		double acc = 0;
+		Long diametroG = max(diam1, diam2);
 		for (auto var : IZQ) {
-			int idx = (upper_bound(DER.begin(), DER.end(), diametroG - var - 1) - DER.begin());		
+			Long idx = (upper_bound(DER.begin(), DER.end(), diametroG - var - 1) - DER.begin());		
 			//cout << "  " << idx << endl;
 			acc += idx*(diametroG) + (acumula[DER.size()] - acumula[idx]) + DER.size() - idx + var*(DER.size() - idx); 
 		}
