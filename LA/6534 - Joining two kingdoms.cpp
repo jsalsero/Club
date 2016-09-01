@@ -85,9 +85,7 @@ int main() {
 		double acc = 0;
 		diam = max(diam, diam2);
 		for (auto var : IZQ) {
-			Long idx = (upper_bound(DER.begin(), DER.end(), diam - var - 1) - DER.begin());		
-			//Long idx = (lower_bound(DER.begin(), DER.end(), diam - var - 1) - DER.begin());		
-			//cout << "  " << idx << endl;
+			Long idx = (upper_bound(DER.begin(), DER.end(), diam - var - 1) - DER.begin());
 			acc += idx*(diam) + acumula[Q] - acumula[idx] + Q - idx + var*(Q - idx); 
 		}
 		double ans = ((double)acc) / ((double)(((double)N) * ((double) Q )));
