@@ -20,7 +20,7 @@ struct Grafo {
 		vector<Long> d(n, INF);
 		q.push(s), d[s] = 0;
 		while (!q.empty()) {
-			Long u = q.front(); q.pop();
+			int u = q.front(); q.pop();
 			for (Long v : ady[u])
 				if (d[u] + 1 < d[v])
 					d[v] = d[u] + 1,
@@ -37,13 +37,13 @@ struct Grafo {
 			if (lejos < pr[i])
 				lejos = pr[i], raiz = i;
 
-		diam = lejos;
 		auto d = BFS(raiz);
 		lejos = -1;
 		for (Long i = 0; i < d.size(); ++i)
 			if (lejos < d[i])
 				lejos = d[i], raiz = i;
 		
+		diam = lejos;
 		auto d2 = BFS(raiz);
 		
 		vector<Long> ans(n);
@@ -75,7 +75,7 @@ int main() {
 		vector<Long> IZQ = blue.distancias();
 		vector<Long> DER = red.distancias();
 		sort(DER.begin(), DER.end());
-		Long diam1 = blue.diam;
+		Long diam = blue.diam;
 		Long diam2 = red.diam;
 		
 		vector<Long> acumula(DER.size() + 7);
@@ -83,16 +83,15 @@ int main() {
 			acumula[i + 1] = acumula[i] + DER[i];
 
 		double acc = 0;
-		Long diametroG = max(diam1, diam2);
+		diam = max(diam, diam2);
 		for (auto var : IZQ) {
-			Long idx = (upper_bound(DER.begin(), DER.end(), diametroG - var - 1) - DER.begin());		
+			Long idx = (upper_bound(DER.begin(), DER.end(), diam - var - 1) - DER.begin());		
+			//Long idx = (lower_bound(DER.begin(), DER.end(), diam - var - 1) - DER.begin());		
 			//cout << "  " << idx << endl;
-			acc += idx*(diametroG) + (acumula[DER.size()] - acumula[idx]) + DER.size() - idx + var*(DER.size() - idx); 
+			acc += idx*(diam) + acumula[Q] - acumula[idx] + Q - idx + var*(Q - idx); 
 		}
-		cout << fixed;
-		cout << setprecision(3);
-		cout << acc/((double)N*Q) << '\n';
-		//cout << endl << endl;
+		double ans = ((double)acc) / ((double)(((double)N) * ((double) Q )));
+		cout << fixed << setprecision(3) << ans << '\n';
 	}
 	return 0;
 }
@@ -105,11 +104,9 @@ int main() {
 3 4
 4 1
 4 5
-
 1 5
 1 2
 2 3
 3 4
 4 5
-
 */
