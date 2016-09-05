@@ -4,7 +4,7 @@ using namespace std;
 typedef long long Long;
 
 #define MAXN 20007
-#define LN 17
+#define LN 15
 
 vector<int> g[MAXN];
 
@@ -22,22 +22,17 @@ void dfs(int s, int parent, int d, int papa[17][MAXN], int *prof) {
 		dfs(v, s, d + 1, papa, prof);
 }
 
-int LCA(int u, int v, int *prof) {
-	if (prof[u])
-}
-
-void init(int N, int *prof) {
+void init(int N, int *prof, int papa[17][MAXN]) {
 	for (int i = 0; i < N; ++i)
 		prof[i] = -1;
-}
-
-void initPadre(int N) {
+		
 	for (int i = 0; i < LN; ++i)
 		for (int j = 0; j < MAXN; ++j)
-			padre[i][j] = padre2[i][j] = -1;
+			papa[i][j] = -1;
 }
 
 void Construir(int s, int N, int papa[17][MAXN], int *prof) {
+	init(N, prof, papa);
 	dfs(s, -1, 0, papa, prof);
 
 	for (int i = 1; i < LN; ++i)
@@ -47,18 +42,28 @@ void Construir(int s, int N, int papa[17][MAXN], int *prof) {
 }
 
 int solve(int node, int dist, int papa[17][MAXN], int *prof) {
-	for (int i = LN - 1; i >= 0; --i)
-		if (prof[node] - (1<<i) > dist)
+	//cout << "dist actual " << dist << " from " << node + 1 << "\n";
+	for (int i = LN - 1; i >= 0; --i) {
+		/*
+		if (papa[i][node] != -1)
+			cout << "    " << papa[i][node] << " -> " << prof[ papa[i][node] ] << endl;
+		*/
+		if (papa[i][node] != -1 && prof[ papa[i][node] ] >= dist) {
+			//cout << "  subiendo ->  " << setw(3) << papa[i][node] << endl;
+			//dist -= prof[ papa[i][node] ];
 			node = papa[i][node];
+		}
+	}
+	//cout << "dist final " << prof[node] << " nodo final-> " << node << "\n";
 	return node;
 }
 
 int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
 	int n, q;
+	int IZQ, DER;
 	cin >> n >> q;
-	initPadre(n);
-	init(n, depth);
-	init(n, depth2);
 
 	for (int i = 0; i < n - 1; ++i) {
 		int a, b;
@@ -66,22 +71,24 @@ int main() {
 		g[a - 1].push_back(b - 1);
 		g[b - 1].push_back(a - 1);
 	}
-		
+
 	Construir(0, n, padre, depth);
 	int idx = 0;
 	for (int i = 1; i < n; ++i)
 		if (depth[idx] < depth[i])
 			idx = i;
-	init(n, depth);
 	Construir(idx, n, padre, depth);
-
+	IZQ = idx;
+	
 	idx = 0;
 	for (int i = 1; i < n; ++i)
 		if (depth[idx] < depth[i])
 			idx = i;
-
+	DER = idx;
+	
 	Construir(idx, n, padre2, depth2);
 
+	//cout << "(" << IZQ+1 << ", " << DER+1 << ")\n";
 	for (int i = 0; i < q; ++i) {
 		int node, d;
 		cin >> node >> d;
@@ -89,9 +96,11 @@ int main() {
 			cout << "0\n";
 		else {
 			if (depth[node - 1] > depth2[node - 1]) {
-				cout << solve(node - 1, depth[node - 1] - d, padre, depth) << '\n';
+				//cout << "          			         prof " << depth[node - 1] << endl;
+				cout << solve(node - 1, depth[node - 1] - d, padre, depth) + 1 << '\n';
 			} else {
-				cout << solve(node - 1, depth2[node - 1] - d, padre2, depth2) << '\n';
+				//cout << "          			         prof " << depth2[node - 1] << endl;
+				cout << solve(node - 1, depth2[node - 1] - d, padre2, depth2) + 1 << '\n';
 			}
 		}
 	}
