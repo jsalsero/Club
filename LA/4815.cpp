@@ -12,22 +12,6 @@ using namespace std;
 
 int const MAXN = 1000 * 100 + 7;
 
-struct uf {
-    vector<int> p;
-
-    uf(int n) : p(n, -1) {}
-
-    int find(int x) { return p[x] < 0? x: p[x] = find(p[x]); }
-
-    bool unir(int x, int y) {
-        int xp = find(x), yp = find(y);
-        if (xp == yp) return false;
-        if (p[xp] > p[yp]) swap(xp, yp);
-        p[xp] += p[yp], p[yp] = xp;
-        return true;
-    }
-};
-
 vector<int> g[MAXN];
 bitset<MAXN> vis;
 int deg[MAXN];
