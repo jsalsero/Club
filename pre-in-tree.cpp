@@ -8,6 +8,11 @@ struct tree{
     int data;
     tree* left;
     tree* right;
+
+    ~tree() {
+        if (left)  delete left;
+        if (right) delete right;
+    }
 };
 
 void print_pre(tree* head) {
@@ -28,10 +33,11 @@ vector<int> ino;
 vector<int> pre;
 tree* build(int ino_begin, int ino_end, int pre_idx) {
     cout << ino_begin << " - " << ino_end << " | " << pre_idx << endl;
-    if (ino_end < 0 || 
-        ino_end >= ino.size() || 
-        ino_begin > ino_end ||
-        pre_idx >= ino.size())
+
+    if (ino_end    < 0          || 
+        ino_end   >= ino.size() || 
+        ino_begin  > ino_end    ||
+        pre_idx   >= ino.size())
         return NULL;
     
     int parent = pre[pre_idx];
@@ -44,14 +50,17 @@ tree* build(int ino_begin, int ino_end, int pre_idx) {
             break;
         }
     }
+
     return t;
 }
 
 int main() {
     int N;
     cin >> N;
+
     pre.assign(N, 0);
     ino.assign(N, 0);
+
     for (int i = 0; i < N; ++i) cin >> pre[i];
     for (int i = 0; i < N; ++i) cin >> ino[i];
 
@@ -61,6 +70,7 @@ int main() {
     print_pre(R);
     cout << endl;
     print_in(R);
+
     return 0;
 }
 /*
