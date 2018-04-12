@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+#define endl '\n'
+#define Long long long
+#define forn(i, n) for(int i = 0; i < n; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
+#define pii pair<int, int>
+#define fi first
+#define se second
+#define pb push_back
+#define eb emplace_back
+using namespace std;
+
+int const MAXN = 1005;
+int const INF = 1e9;
+    
+int n, m, s, t;
+vector<int> g[MAXN];
+
+void dijkstra(int s) {
+    vector<int> dist(n, INF);
+    priority_queue< pii, vector<pii>, greater<pii> > pq;
+
+    pq.push(pii(0, s));
+    dist[s] = 0;
+
+    while (!pq.empty()) {
+        int p = pq.top().fi;
+        int u = pq.top().se;
+        pq.pop();
+
+        if (dis[u] < p) continue;
+
+        for (const auto &var : g[u]) {
+            int v = var;
+            p = dist[u] + 
+        }
+    }
+}
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n >> m >> s >> t;
+
+    --s, --t;
+
+    forn(i, m) {
+        int u, v;
+        cin >> u >> v;
+
+        g[u].eb(v);
+        g[v].eb(u);
+    }
+
+    return 0;
+}
+
