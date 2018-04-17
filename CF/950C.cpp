@@ -67,7 +67,6 @@ int main() {
                 aux.eb(prev);
                 prev = ans[prev];
             }
-
             all.eb(aux);
         }
         
