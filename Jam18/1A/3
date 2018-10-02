@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+#define endl '\n'
+#define Long long long
+#define forn(i, n) for(int i = 0; i < n; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
+#define pii pair<int, int>
+#define fi first
+#define se second
+#define pb push_back
+using namespace std;
+
+int const MAXN = 5005;
+
+int r, c, h, v;
+char data[107][107];
+
+bool valid(int row, int col) {
+    int a = 0, b = 0, c = 0, d = 0;
+
+    rep(i, 1, row)
+        rep(j, 1, col)
+            a += (data[i][j] == '@');
+
+    rep(i, 1, row)
+        rep(j, col, c)
+            b += (data[i][j] == '@');
+
+    rep(i, row, r)
+        rep(j, 1, col)
+            a += (data[i][j] == '@');
+
+    rep(i, row, r)
+        rep(j, col, c)
+            a += (data[i][j] == '@');
+    
+    return (a == b && b == c && c == d);
+}
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    int t;
+    cin >> t;
+
+    forn(caso, t) {
+        if (caso) cout << endl;
+        cout << "Case #" << caso + 1 << ": ";
+    
+        cin >> r >> c >> h >> v;
+        
+        forn(row, r)
+            forn(col, c)
+                cin >> data[row][col];
+        
+        bool ans = false;
+        rep(row, 1, r) {
+            if (ans) break;
+            rep(col, 1, c) {
+                ans = (valid(row, col));
+                if (ans) break;
+            }
+        }
+    
+        if (ans)
+            cout << "POSSIBLE";
+        else 
+            cout << "IMPOSSIBLE";
+    }
+
+    return 0;
+}
+

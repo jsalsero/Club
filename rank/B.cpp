@@ -7,7 +7,6 @@
 #define fi first
 #define se second
 #define pb push_back
-#define eb emplace_back
 using namespace std;
 
 int const MAXN = 5005;
@@ -17,22 +16,29 @@ int main() {
     cin.tie(0);
 
     int n;
-    string cad;
-
-    cin >> n >> cad;
+    cin >> n;
     
-    int ans = n;
-    forn(j, n) {
-        int tam = j + 1;
-        int aux = n;
-
-        if (cad.find(cad.substr(0, tam), j + 1) == j + 1)
-            aux -= tam, aux++;
-
-        ans = min(ans, aux);
+    vector<int> data(n);
+    forn(i, n) cin >> data[i];
+    
+    multiset<int> s(data.begin(), data.end());
+    vector<int> otro(n - 1);
+    forn(i, n - 1) {
+        int aux;
+        cin >> aux;
+        s.erase(s.find(aux));
+        otro[i] = aux;
     }
-    
-    cout << ans << endl;
+    cout << *s.begin() << endl;
+
+    multiset<int> k(otro.begin(), otro.end());
+    forn(i, n - 2) {
+        int aux;
+        cin >> aux;
+        k.erase(k.find(aux));
+    }
+    cout << *k.begin() << endl;
+
     return 0;
 }
 

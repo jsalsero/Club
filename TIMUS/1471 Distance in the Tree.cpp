@@ -91,6 +91,7 @@ int main() {
     }
     return 0;
 }
+
 /*
 3
 1 0 1
