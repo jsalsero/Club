@@ -9,31 +9,73 @@
 #define pb push_back
 using namespace std;
 
-int const MAXN = 5005;
+int const MAXN = 1e6 + 7;
+
+bitset<MAXN> bs;
+vector<int> primes;
+//int last[MAXN];
+
+void criba() {
+    bs.set();
+
+    bs[0] = bs[1] = 0;
+    for (Long i = 2; i < MAXN; ++i) if (bs[i]) {
+        for (Long j = i*i; j < MAXN; j += i)
+            bs[j] = 0;
+
+        primes.pb((int)i);
+        //last[i] = i;
+    }
+}
 
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    int n, m;
-    cin >> n >> m;
+    criba();
+
+    int n;
+    while (cin >> n) {
     
-    int ans = 0;
-    for (int i = 1; i <= 5 * 100000; ++i) {
-        // tipo A
-        if (i <= n && 2*i <= m) {
-            int aux = min((n - i)/2, m - 2*i);
-            ans = max(ans, i + aux);
+    int unos = 1; // contamos el primer uno, porque no es primo
+    
+    int idx = upper_bound(primes.begin(), primes.end(), n) - primes.begin();
+    unos += idx + 1;
+
+    unos -= (idx < primes.size() && primes[idx] > n);
+
+    if (n < 4) {
+        forn(i, n - 1) cout << 1 << ' ';
+        cout << n << endl;
+        return 0;
+    }
+
+    forn(i, unos) cout << 1 << ' ';
+
+    set<int> all;
+    forn(i, n) if (i > 0 && !bs[i + 1])
+        all.insert(i + 1); 
+    
+    int gcd, borra;
+    while (all.size()) {
+        gcd = *all.rbegin();
+        borra = gcd;
+
+        for (const auto &var : all) {
+            int nuevo = __gcd(gcd, var);
+
+            if (nuevo < gcd)
+                borra = var;
+
+            gcd = nuevo;
         }
 
-        // tipo B
-        if (2*i <= n && i <= m) {
-            int aux = min(n - 2*i, (m - i)/2);
-            ans = max(ans, i + aux);
-        }
+        cout << gcd << ' ' ;
+        all.erase(all.find(borra));
     }
-    
-    cout << ans << endl;
+
+    cout << endl;
+    }
     return 0;
 }
 

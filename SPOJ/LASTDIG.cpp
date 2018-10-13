@@ -11,29 +11,31 @@ using namespace std;
 
 int const MAXN = 5005;
 
+Long exp(Long a, Long n, Long MOD) {
+    Long ans = 1;
+
+    for (; n; n >>= 1LL) {
+        if (n & 1)
+            ans = (ans * a) % MOD;
+        a = (a * a) % MOD;
+    }
+
+    return ans;
+}
+
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    int n, L, a;
-    cin >> n >> L >> a;
+    int t;
+    cin >> t;
 
-    if (!n) {
-        cout << L/a << endl;
-        return 0;
+    while (t--) {
+        Long a, b;
+        cin >> a >> b;
+        cout << exp(a, b, 10) << endl;
     }
-    
-    vector<pii> data(n);
-    forn(i, n) cin >> data[i].fi >> data[i].se, data[i].se += data[i].fi;
 
-    Long ans = 0;
-    ans += data[0].fi/a;
-
-    forn(i, n - 1) ans += (data[i + 1].fi - data[i].se)/a;
-
-    ans += (L - data.back().se)/a;
-
-    cout << ans << endl;
     return 0;
 }
 

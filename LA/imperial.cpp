@@ -11,27 +11,30 @@
 using namespace std;
 
 struct uf {
-    vector<int> data;
+    vector<int> padre;
 
-    uf(int n) : data(n, -1) {}
+    uf(int N) : padre(N) {
+        while (--N) padre[N] = N;
+    }
 
-    int find(int x) { return data[x] < 0? x: data[x] = find(data[x]); }
+    int find(int u) { 
+        if (padre[u] == u) return u;
+        return padre[u] = find(padre[u]);
+    }
 
     bool unir(int a, int b) {
         int xa = find(a);
         int xb = find(b);
 
         if (xa == xb) return false;
-
-        if (data[xa] > data[xb]) swap(xa, xb);
-        data[xa] += data[xb], data[xb] = xa;
-
+    
+        padre[xa] = xb;
         return true;
     }
 };
 
-const int MAXN = 200 * 1000 + 7;
-const int LOGN = 18;
+const int MAXN = 2000 * 1000 + 7;
+const int LOGN = 21;
 
 int n, r;
 
@@ -42,17 +45,33 @@ int maxi[MAXN][LOGN];
 int prof[MAXN];
 
 map< pii, int> M;
-uf kruskal(MAXN);
 
 void limpia() {
     M.clear();
     forn(i, n + 5) {
         g[i].clear();
-        kruskal.data[i] = -1;
-        papa[i][0] = 0;
+        prof[i] = 0;
+        fill(papa[i], papa[i] + LOGN, 0);
+        fill(maxi[i], maxi[i] + LOGN, 0);
     }
 }
 
+void dfs(int u, int p) {
+    papa[u][0] = p;
+    prof[u] = prof[p] + 1;
+
+    for (const auto &var : g[u]) {
+        if (var != p) {
+            //papa[var][0] = u;
+            maxi[var][0] = M[pii(u, var)];
+            //prof[var] = prof[u] + 1;
+
+            dfs(var, u);
+        }
+    }
+}
+
+/*
 void dfs(int u) {
     for (const auto &var : g[u]) {
         if (var != papa[u][0]) {
@@ -64,6 +83,7 @@ void dfs(int u) {
         }
     }
 }
+*/
 
 Long solve(int a, int b) {
     if (prof[a] < prof[b]) swap(a, b);
@@ -79,11 +99,11 @@ Long solve(int a, int b) {
 
     for (int salto = LOGN - 1; salto >= 0; --salto)
         if (papa[a][salto] != papa[b][salto]) {
-            a = papa[a][salto];
-            b = papa[b][salto];
-
             pesada = max(pesada, maxi[a][salto]);
             pesada = max(pesada, maxi[b][salto]);
+
+            a = papa[a][salto];
+            b = papa[b][salto];
         }
     
     pesada = max(pesada, maxi[a][0]);
@@ -94,6 +114,8 @@ Long solve(int a, int b) {
 
 Long build() {
     sort(aristas, aristas + r);
+
+    uf kruskal(n);
 
     Long total = 0;
     forn(i, r) {
@@ -108,7 +130,7 @@ Long build() {
         }
     }
 
-    dfs(0);
+    dfs(0, 0);
 
     for (int salto = 1; salto < LOGN; ++salto) {
         for (int u = 0; u < n; ++u) {
@@ -127,6 +149,9 @@ int main() {
     cin.tie(0);
 
     while (cin >> n >> r) {
+        assert(n <= 1e5);
+        assert(r <= 2e5);
+
         forn(i, r) {
             Long a, b, c;
             cin >> a >> b >> c;
