@@ -7,6 +7,7 @@
 #define fi first
 #define se second
 #define pb push_back
+#define vi vector<int>
 using namespace std;
 
 int const MAXN = 5005;
