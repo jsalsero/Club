@@ -7,7 +7,7 @@
 #define pii pair<int, int>
 #define Long long long
 #define fi first
-#define se second
+#define se secon
 using namespace std;
 
 const int MAXN = 100 * 1000 + 7;
@@ -16,27 +16,10 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    int n;
-    cin >> n;
-    
-    int acc = 0;
-    int ini = 1;
-    forn(i, n) {
-        int val;
-        cin >> val;
-        ini = max(ini, val);
+    int a, b;
+    cin >> a >> b;
 
-        acc += val;
-    }
-    
-    rep(ans, ini, 10000) {
-        int yo = ans*n - acc;
-        if (yo > acc) {
-            cout << ans << endl;
-            return 0;
-        }
-    }
-
+    cout << max(39*2 + 40 + 2*(a - 40) + 1, 2*b + 40) << endl;
     return 0;
 }
 

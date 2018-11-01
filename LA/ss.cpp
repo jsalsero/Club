@@ -16,26 +16,13 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    int n;
-    cin >> n;
-    
-    int acc = 0;
-    int ini = 1;
-    forn(i, n) {
-        int val;
-        cin >> val;
-        ini = max(ini, val);
+    set<pii> s;
+    s.insert({1, 4});
+    s.insert({5, 10});
 
-        acc += val;
-    }
-    
-    rep(ans, ini, 10000) {
-        int yo = ans*n - acc;
-        if (yo > acc) {
-            cout << ans << endl;
-            return 0;
-        }
-    }
+    auto it = s.upper_bound({3, 7});
+    if (it != s.begin() && 3 < (*it).fi) it--;
+    cout << (*it).fi << endl;
 
     return 0;
 }
