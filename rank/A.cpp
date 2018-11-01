@@ -16,6 +16,7 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
+<<<<<<< HEAD
     int n;
     cin >> n;
     
@@ -37,6 +38,27 @@ int main() {
         }
     }
 
+=======
+    int n, L, a;
+    cin >> n >> L >> a;
+
+    if (!n) {
+        cout << L/a << endl;
+        return 0;
+    }
+    
+    vector<pii> data(n);
+    forn(i, n) cin >> data[i].fi >> data[i].se, data[i].se += data[i].fi;
+
+    Long ans = 0;
+    ans += data[0].fi/a;
+
+    forn(i, n - 1) ans += (data[i + 1].fi - data[i].se)/a;
+
+    ans += (L - data.back().se)/a;
+
+    cout << ans << endl;
+>>>>>>> 90aed97eaff97ff07139c6102ba883f43c234de0
     return 0;
 }
 

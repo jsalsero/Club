@@ -1,11 +1,14 @@
 3
 
+<<<<<<< HEAD
 2
 1 2 10
 QUERY 1 2
 QUERY 2 1
 DONE
 
+=======
+>>>>>>> 90aed97eaff97ff07139c6102ba883f43c234de0
 3
 1 2 1
 2 3 2
@@ -21,3 +24,16 @@ QUERY 1 2
 CHANGE 1 3
 QUERY 1 2
 DONE
+<<<<<<< HEAD
+=======
+
+5
+1 2 1
+2 3 4
+1 4 6
+2 5 7
+QUERY 5 1
+QUERY 3 4
+DONE
+
+>>>>>>> 90aed97eaff97ff07139c6102ba883f43c234de0
