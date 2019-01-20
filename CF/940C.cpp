@@ -2,7 +2,6 @@
 #define pb push_back
 #define eb emplace_back
 #define forn(i, n) for (int i = 0; i < n; ++i)
-#define rep(a, b, n) for (int i = a; i < b; ++i)
 #define endl '\n'
 #define pii pair<int, int>
 #define Long long long
@@ -16,51 +15,27 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
+    int n, k;
     string cad;
-    cin >> cad;
-
-    vector< vector<int> > full;
-    vector< vector<int> > half;
     
+    cin >> n >> k >> cad;
 
-    forn(i, cad.size()) {
-        if (cad[i] == '0') {
-            if (half.empty())
-                full.eb(i);
-            else {
-                vector<int> aux = half.back();
-                half.pop_back();
-                aux.eb(i);
+    set<char> alfa;
+    forn(i, n) alfa.insert(cad[i]);
+    
+    char mini = *alfa.begin();
+    char maxi = *alfa.rbegin();
+    forn(ii, k - n) cad += mini;
 
-                full.eb(aux);
-            }
+    for (int i = k - 1; i >= 0 && k <= n; --i)
+        if (cad[i] != maxi) {
+            cad[i] = *alfa.upper_bound(cad[i]);
+            for (int jj = i + 1; jj < cad.size(); ++jj)
+                cad[jj] = mini;
+            break;
         }
 
-        if (cad[i] == '1') {
-            if (full.empty()) {
-                cout << -1 << endl;
-                return 0;
-            } else {
-                vector<int> aux = full.back();
-                full.pop_back();
-                aux.eb(i);
-
-                half.eb(aux);
-            }
-        }
-    }
-
-    if (half.size())
-        cout << -1 << endl;
-    else {
-        cout << full.size() << endl;
-        for (const auto &sub : full) {
-            cout << sub.size() << ' ';
-            for (const auto &var : sub) cout << var << ' ';
-            cout << endl;
-        }
-    }
-
+    cout << cad.substr(0, k) << endl;
     return 0;
 }
 
