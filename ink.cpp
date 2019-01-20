@@ -11,16 +11,25 @@ using namespace std;
 
 int const MAXN = 5005;
 
+bool isHuman(int c) {
+    
+}
+
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    Long n;
+    int n;
     cin >> n;
 
-    n--;
-    
-    cout << ((n % 4) < 2) << endl;
+    forn(i, n - 1) {
+        int p;
+        cin >> p;
+
+        --p;
+        g[p].pb(i);
+    }
+
     return 0;
 }
 

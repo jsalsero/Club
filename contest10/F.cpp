@@ -11,16 +11,25 @@ using namespace std;
 
 int const MAXN = 5005;
 
+() {
+    
+}
+
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    Long n;
-    cin >> n;
+    forn(i, 2) cin >> p[i].fi >> p[i].se;
+    forn(i, 2) cin >> v[i].fi >> v[i].se;
 
-    n--;
-    
-    cout << ((n % 4) < 2) << endl;
+    double izq = 0, der = 1e9;
+
+    forn(i, 82) {
+        double m = (izq + der)/2.0;
+
+        
+    }
+
     return 0;
 }
 

@@ -9,73 +9,42 @@
 #define pb push_back
 using namespace std;
 
-int const MAXN = 1e6 + 7;
-
-bitset<MAXN> bs;
-vector<int> primes;
-//int last[MAXN];
-
-void criba() {
-    bs.set();
-
-    bs[0] = bs[1] = 0;
-    for (Long i = 2; i < MAXN; ++i) if (bs[i]) {
-        for (Long j = i*i; j < MAXN; j += i)
-            bs[j] = 0;
-
-        primes.pb((int)i);
-        //last[i] = i;
-    }
-}
+int const MAXN = 5005;
 
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    criba();
-
-    int n;
-    while (cin >> n) {
+    int n, x, y;
+    cin >> n >> x >> y;
     
-    int unos = 1; // contamos el primer uno, porque no es primo
+    vector<int> data(n);
+    forn(i, n) cin >> data[i];
+
+    sort(data.begin(), data.end());
     
-    int idx = upper_bound(primes.begin(), primes.end(), n) - primes.begin();
-    unos += idx + 1;
+    int idx = 0;
+    int ans = 0;
+    int it  = 0;
+    bool yo = true;
 
-    unos -= (idx < primes.size() && primes[idx] > n);
+    while (it++ < 1e9 && idx < n) {
+        if (yo) {
+            data[idx] -= x;
 
-    if (n < 4) {
-        forn(i, n - 1) cout << 1 << ' ';
-        cout << n << endl;
-        return 0;
-    }
+            if (data[idx] <= 0)
+                ans++, idx++;
+        } else {
+            data[idx] += y;
 
-    forn(i, unos) cout << 1 << ' ';
-
-    set<int> all;
-    forn(i, n) if (i > 0 && !bs[i + 1])
-        all.insert(i + 1); 
-    
-    int gcd, borra;
-    while (all.size()) {
-        gcd = *all.rbegin();
-        borra = gcd;
-
-        for (const auto &var : all) {
-            int nuevo = __gcd(gcd, var);
-
-            if (nuevo < gcd)
-                borra = var;
-
-            gcd = nuevo;
+            if (x <= y)
+                idx++;
         }
 
-        cout << gcd << ' ' ;
-        all.erase(all.find(borra));
+        yo = !yo;
     }
 
-    cout << endl;
-    }
+    cout << ans << endl;
     return 0;
 }
 

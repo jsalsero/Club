@@ -7,6 +7,7 @@
 #define fi first
 #define se second
 #define pb push_back
+#define vi vector<int>
 using namespace std;
 
 int const MAXN = 5005;
@@ -15,12 +16,6 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    Long n;
-    cin >> n;
-
-    n--;
-    
-    cout << ((n % 4) < 2) << endl;
     return 0;
 }
 

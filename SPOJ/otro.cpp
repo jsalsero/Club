@@ -11,16 +11,25 @@ using namespace std;
 
 int const MAXN = 5005;
 
+void meh(vector<int> &data) {
+    set<int> chafa;
+
+    chafa = set<int>(data.begin(), data.end());
+
+    for (const auto &var : chafa) cout << var << ' '; cout << endl;
+}
+
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    Long n;
-    cin >> n;
+    vector<int> data(200, 10);
+    meh(data);
 
-    n--;
-    
-    cout << ((n % 4) < 2) << endl;
+    if (data.size() > 10) data.resize(10);
+
+    for (auto var : data) cout << var << ' '; cout << endl;
+
     return 0;
 }
 

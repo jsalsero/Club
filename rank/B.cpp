@@ -9,76 +9,49 @@
 #define pb push_back
 using namespace std;
 
-int const MAXN = 1009;
-
-char data[MAXN][MAXN];
-char fake[MAXN][MAXN];
-//bool  vis[MAXN][MAXN];
-
-int n, m;
-
-/*
-bool valid(int i, int j) {
-    bool ans = true;
-
-    forn(it, 3) {
-        ans &= (data[i][j + it] == '#' && data[i][j + it] == data[i + 2][j + it]);
-        ans &= (data[i + it][j] == '#' && data[i + it][j] == data[i + it][j + 2]);
-
-        ans &= (data[i + 1][j + 1] == '.');
-    }
-    
-    return ans;
-}
-*/
-
-void pinta(int i, int j) {
-    forn(it, 3) {
-        fake[i][j + it] = fake[i + 2][j + it] = '#';
-        fake[i + it][j] = fake[i + it][j + 2] = '#';
-        //vis[i][j + it] = vis[i + 2][j + it] = 1;
-        //vis[i + it][j] = vis[i + it][j + 2] = 1;
-    }
-}
-
-bool check() {
-    forn(i, n)
-        forn(j, m)
-            if (data[i][j] == '#' && data[i][j] != fake[i][j])
-                return false;
-
-    return true;
-}
-
-bool cuadro(int i, int j) {
-    forn(it, 3) {
-        if (data[i][j + it] == '.')     return false;
-        if (data[i + 2][j + it] == '.') return false;
-
-        if (data[i + it][j] == '.')     return false;
-        if (data[i + it][j + 2] == '.') return false;
-    }
-
-    return true;
-}
+int const MAXN = 5005;
 
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    cin >> n >> m;
-    
-     forn(i, n)
-         forn(j, m)
-            cin >> data[i][j];
+    int n, k;
+    cin >> n >> k;    
 
-     forn(i, n - 2)
-         forn(j, m - 2) {
-            if (cuadro(i, j))
-                pinta(i, j);
-        }
+    set< pii > s;
+    forn(i, n) {
+        int val;
+        cin >> val;
+
+        s.insert({val, i});
+    }
+
+    vector< set<int> > llevo(k);
+    vector<int> ans(n);
     
-    cout << (check()? "YES": "NO") << endl;
+    while (s.size()) {
+        forn(color, k) {
+            if (s.empty()) break;
+
+            auto it = s.begin();
+            int val = (*it).fi;
+            int idx = (*it).se;
+
+            if (llevo[color].find(val) != llevo[color].end()) {
+                cout << "NO" << endl;
+                return 0;
+            }
+
+            llevo[color].insert(val);
+
+            s.erase(it);
+            ans[idx] = color + 1;
+        }
+    }
+    
+    cout << "YES" << endl;
+    forn(i, n) cout << ans[i] << ' ';
+    cout << endl;
     return 0;
 }
 

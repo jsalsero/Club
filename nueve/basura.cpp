@@ -15,12 +15,15 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    Long n;
-    cin >> n;
+    bitset<15> bs;
 
-    n--;
+    bs = bitset<15>(17);
     
-    cout << ((n % 4) < 2) << endl;
+    forn(i, 8)
+        cout << bs[i];
+    cout << endl;
+    cout << bs.to_string() << endl;
+
     return 0;
 }
 
