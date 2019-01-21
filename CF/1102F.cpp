@@ -24,7 +24,6 @@ int dp(int ini, int mask, int last) {
     if (t != -1)
         return t;
 
-    //if (!mask)
     if (__builtin_popcount(mask) == 1)
         return t = dos[last][ini];
 
@@ -59,7 +58,7 @@ int main() {
         forn(j, (1<<MAXN))  
             fill(memo[i][j], memo[i][j] + MAXN, -1);
 
-    int ans = -1;
+    int ans = 0;
     forn(u, n)
         ans = max(ans, dp(u, (1<<n) - 1, u));
 
