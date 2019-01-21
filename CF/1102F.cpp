@@ -12,7 +12,7 @@ using namespace std;
 int const MAXN = 17;
 
 int n, m;
-int data[MAXN][MAXN];
+int data[MAXN][100 * 100 + 7];
 int uno[MAXN][MAXN];
 int dos[MAXN][MAXN];
 
